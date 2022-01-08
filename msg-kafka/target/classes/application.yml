@@ -1,0 +1,87 @@
+#目前健康检查默认是用的8080端口，这里严禁修改端口号。
+server:
+  port: 8082
+
+#注意！！！财险的域名是zhonganonline.com,如果是科技的项目，这里要改成zhonganinfo.com
+spring:
+  application:
+    name: zaab-life-biz
+  profiles:
+    active: ${DEPLOY_ENV}
+  cloud:
+    config:
+      uri: http://msc.zhonganonline.com
+      #label: 68888
+      label: ${PROJECT_ID:public}
+      #label: hezhong
+      failFast: true
+  #  thymeleaf:
+  #    cache: false
+  #    mode: HTML5
+  #  freemarker:
+  #    allowRequestOverride: false
+  #    allowSessionOverride: false
+  #    cache: true
+  #    checkTemplateLocation: true
+  #    contentType: text/html
+  #    exposeRequestAttributes: false
+  #    exposeSessionAttributes: false
+  #    exposeSpringMacroHelpers: false
+  #    suffix: .html
+  #    templateEncoding: UTF-8
+  #    templateLoaderPath: classpath:/templates/  #表示所有的模板文件都放在该目录下
+  #    spring.freemarker.settings:
+  #      locale: zh_CN
+  #      date_format: yyyy-MM-dd
+  #      time_format: HH:mm:ss
+  #      datetime_format: yyyy-MM-dd HH:mm:ss
+  jackson:
+    #日期格式化
+    serialization-inclusion: non_null
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    serialization:
+      #格式化输出
+      indent_output: true
+      #忽略无法转换的对象
+      fail_on_empty_beans: false
+      #设置空如何序列化
+    defaultPropertyInclusion: NON_EMPTY
+    deserialization:
+      #允许对象忽略json中不存在的属性
+      fail_on_unknown_properties: false
+    parser:
+      #允许出现特殊字符和转义符
+      allow_unquoted_control_chars: true
+      #允许出现单引号
+      allow_single_quotes: true
+
+ribbon:
+  ConnectTimeout: 30000
+  ReadTimeout: 600000
+  MaxAutoRetries: 0
+  MaxAutoRetriesNextServer: 0
+  OkToRetryOnAllOperations: false
+
+management:
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+      base-path: /
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+#去掉健康检查的一些条目，可以参考wiki：http://wiki.zhonganonline.com/pages/viewpage.action?pageId=17620265
+
+#####################################################################################################
+
+#projectIdMap在测试环境跨项目访问时使用。应用名1:boom项目号;应用名2:boom项目号。
+#预发和生产不会读取此配置，因此不用注释掉。
+
